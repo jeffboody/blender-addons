@@ -2815,10 +2815,18 @@ def appearance_LoadTexture(tex_node, ancestry, node):
         bpyima = appearance_LoadPixelTexture(tex_node, ancestry)
 
     if bpyima:  # Loading can still fail
-        repeat_s = tex_node.getFieldAsBool('repeatS', True, ancestry)
-        bpyima.use_clight_x = not repeat_s
-        repeat_t = tex_node.getFieldAsBool('repeatT', True, ancestry)
-        bpyima.use_clight_y = not repeat_t
+        # With Blender v2.8 on Ubuntu 19.10 the use_clight_x
+        # variable triggers a Python attribute error when
+        # the x3d file includes an ImageTexture. e.g.
+        # <Appearance>
+        #    <ImageTexture url='texture.png' />
+        # </Appearance>
+
+        # Commenting the following code avoids the attribute error.
+        # repeat_s = tex_node.getFieldAsBool('repeatS', True, ancestry)
+        # bpyima.use_clight_x = not repeat_s
+        # repeat_t = tex_node.getFieldAsBool('repeatT', True, ancestry)
+        # bpyima.use_clight_y = not repeat_t
 
         # Update the desc-based cache
         if desc:
